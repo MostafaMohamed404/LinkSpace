@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Bio - Link Tree</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="Css/style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+</head>
+<body class="bg-gradient-1" id="mainBody">
+    <div class="container">
+        <header class="header">
+            <button class="language-toggle" onclick="toggleLanguage()">
+                <i class="fas fa-globe"></i> <span id="langText">العربية</span>
+            </button>
+            <h1 data-en="Personal Bio Link Tree" data-ar="شجرة الروابط الشخصية">Personal Bio Link Tree</h1>
+            <p data-en="Create your personal link hub" data-ar="أنشئ مركز روابطك الشخصية">Create your personal link hub</p>
+        </header>
+
+        <main class="main-content">
+            <div class="editor-section" data-aos="fade-right">
+                <h2 class="section-title">
+                    <i class="fas fa-edit"></i>
+                    <span data-en="Customize Your Profile" data-ar="تخصيص ملفك الشخصي">Customize Your Profile</span>
+                </h2>
+
+                <div class="form-group">
+                    <label data-en="Your Name" data-ar="اسمك">Your Name</label>
+                    <input type="text" id="userName" placeholder="Enter your name" data-placeholder-en="Enter your name" data-placeholder-ar="أدخل اسمك">
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Bio / Description" data-ar="النبذة التعريفية">Bio / Description</label>
+                    <textarea id="userBio" placeholder="Tell people about yourself..." data-placeholder-en="Tell people about yourself..." data-placeholder-ar="أخبر الناس عن نفسك..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Profile Picture" data-ar="صورة الملف الشخصي">Profile Picture</label>
+                    <div class="file-upload">
+                        <input type="file" id="profilePic" accept="image/*">
+                        <label for="profilePic" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span data-en="Click to upload image" data-ar="اضغط لرفع الصورة">Click to upload image</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label data-en="Background Template" data-ar="قالب الخلفية">Background Template</label>
+                    <div class="bg-templates">
+                        <div class="bg-template bg-gradient-1 active" onclick="changeBackground('bg-gradient-1')"></div>
+                        <div class="bg-template bg-gradient-2" onclick="changeBackground('bg-gradient-2')"></div>
+                        <div class="bg-template bg-gradient-3" onclick="changeBackground('bg-gradient-3')"></div>
+                        <div class="bg-template bg-gradient-4" onclick="changeBackground('bg-gradient-4')"></div>
+                        <div class="bg-template bg-gradient-5" onclick="changeBackground('bg-gradient-5')"></div>
+                        <div class="bg-template bg-pattern-1" onclick="changeBackground('bg-pattern-1')"></div>
+                        <div class="bg-template bg-pattern-2" onclick="changeBackground('bg-pattern-2')"></div>
+                    </div>
+                </div>
+
+                <div class="form-group social-links">
+                    <label data-en="Social Media Links" data-ar="روابط وسائل التواصل الاجتماعي">Social Media Links</label>
+                    <div id="socialLinksContainer"></div>
+                    <button class="add-link" onclick="addSocialLink()">
+                        <i class="fas fa-plus"></i> <span data-en="Add Social Link" data-ar="إضافة رابط">Add Social Link</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-section" data-aos="fade-left">
+                <div class="preview-card" id="previewCard">
+                    <div class="profile-image" id="previewImage">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="profile-name" id="previewName" data-en="Your Name" data-ar="اسمك">Your Name</h2>
+                    <p class="profile-bio" id="previewBio" data-en="Your bio will appear here..." data-ar="ستظهر نبذتك التعريفية هنا...">Your bio will appear here...</p>
+                    <div class="social-links-preview" id="previewLinks"></div>
+                </div>
+
+                <div class="qr-section">
+                    <button class="generate-qr" onclick="generateQR()">
+                        <i class="fas fa-qrcode"></i> <span data-en="Generate QR Code" data-ar="إنشاء رمز QR">Generate QR Code</span>
+                    </button>
+                    <div class="qr-container" id="qrContainer">
+                        <canvas id="qrCanvas"></canvas>
+                        <br>
+                        <button class="download-qr" onclick="downloadQR()">
+                            <i class="fas fa-download"></i> <span data-en="Download QR" data-ar="تحميل رمز QR">Download QR</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="javascript/script.js"></script>
+</body>
+</html>

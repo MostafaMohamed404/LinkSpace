@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="Css/style.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-1" id="cardBody">
+    <!-- Back to Editor Button -->
+    <button class="back-button" onclick="goBackToEditor()">
+        <i class="fas fa-arrow-left"></i> 
+        <span data-en="Back to Editor" data-ar="العودة للمحرر">Back to Editor</span>
+    </button>
+
+    <!-- Language Toggle for Card -->
+    <button class="language-toggle card-lang-toggle" onclick="toggleLanguage()">
+        <i class="fas fa-globe"></i> <span id="langText">العربية</span>
+    </button>
+
+    <div class="card-only-container">
+        <div class="preview-card card-standalone" id="profileCard">
+            <div class="profile-image" id="cardImage">
+                <i class="fas fa-user"></i>
+            </div>
+            <h2 class="profile-name" id="cardName" data-en="Your Name" data-ar="اسمك">Your Name</h2>
+            <p class="profile-bio" id="cardBio" data-en="Your bio will appear here..." data-ar="ستظهر نبذتك التعريفية هنا...">Your bio will appear here...</p>
+            <div class="social-links-preview" id="cardLinks"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables for card page
+        let currentLang = 'en';
+
+        // Social media platforms with their icons (same as main page)
+        const socialPlatforms = {
+            instagram: { icon: 'fab fa-instagram', color: 'instagram' },
+            facebook: { icon: 'fab fa-facebook', color: 'facebook' },
+            twitter: { icon: 'fab fa-twitter', color: 'twitter' },
+            linkedin: { icon: 'fab fa-linkedin', color: 'linkedin' },
+            youtube: { icon: 'fab fa-youtube', color: 'youtube' },
+            tiktok: { icon: 'fab fa-tiktok', color: 'tiktok' },
+            snapchat: { icon: 'fab fa-snapchat', color: 'snapchat' },
+            whatsapp: { icon: 'fab fa-whatsapp', color: 'whatsapp' },
+            telegram: { icon: 'fab fa-telegram', color: 'telegram' },
+            website: { icon: 'fas fa-globe', color: 'website' }
+        };
+
+        // Initialize card page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCardData();
+            
+            // Add entrance animation
+            setTimeout(() => {
+                document.getElementById('profileCard').classList.add('card-entrance');
+            }, 100);
+        });
+
+        // Load data from URL parameters
+        function loadCardData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const encodedData = urlParams.get('data');
+            
+            if (encodedData) {
+                try {
+                    const data = JSON.parse(decodeURIComponent(atob(encodedData)));
+                    
+                    // Load name
+                    if (data.name) {
+                        document.getElementById('cardName').textContent = data.name;
+                    }
+                    
+                    // Load bio
+                    if (data.bio) {
+                        document.getElementById('cardBio').textContent = data.bio;
+                    }
+                    
+                    // Load profile image (if saved in localStorage from main page)
+                    const savedImage = localStorage.getItem('profileImage');
+                    if (savedImage) {
+                        document.getElementById('cardImage').innerHTML = `<img src="${savedImage}" alt="Profile">`;
+                    }
+                    
+                    // Load social links
+                    const cardLinksContainer = document.getElementById('cardLinks');
+                    cardLinksContainer.innerHTML = '';
+                    
+                    if (data.links && data.links.length > 0) {
+                        data.links.forEach(linkData => {
+                            if (linkData.url) {
+                                const linkElement = document.createElement('a');
+                                linkElement.href = linkData.url;
+                                linkElement.target = '_blank';
+                                linkElement.className = `social-link-preview ${socialPlatforms[linkData.platform].color}`;
+                                linkElement.innerHTML = `
+                                    <i class="${socialPlatforms[linkData.platform].icon}"></i>
+                                    <span>${linkData.platform.charAt(0).toUpperCase() + linkData.platform.slice(1)}</span>
+                                `;
+                                cardLinksContainer.appendChild(linkElement);
+                            }
+                        });
+                    }
+                    
+                    // Load background if specified
+                    const background = urlParams.get('bg') || 'bg-gradient-1';
+                    document.getElementById('cardBody').className = background;
+                    
+                } catch (error) {
+                    console.error('Error loading card data:', error);
+                    showErrorMessage();
+                }
+            } else {
+                showErrorMessage();
+            }
+        }
+
+        // Language toggle functionality
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            document.body.className = document.body.className.replace(/\b(ltr|rtl)\b/g, '') + (currentLang === 'ar' ? ' rtl' : ' ltr');
+            
+            // Update all text elements
+            document.querySelectorAll('[data-en][data-ar]').forEach(el => {
+                el.textContent = el.getAttribute('data-' + currentLang);
+            });
+
+            // Update language toggle button
+            document.getElementById('langText').textContent = currentLang === 'en' ? 'العربية' : 'English';
+        }
+
+        // Go back to editor
+        function goBackToEditor() {
+            // Get current URL parameters to preserve data
+            const currentParams = window.location.search;
+            // Create editor URL with data
+            const editorURL = 'index.html' + currentParams.replace('cardOnly=true', '').replace('&cardOnly=true', '').replace('cardOnly=true&', '');
+            window.location.href = editorURL;
+        }
+
+        // Show error message if data couldn't be loaded
+        function showErrorMessage() {
+            const card = document.getElementById('profileCard');
+            card.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f56565; margin-bottom: 20px;"></i>
+                    <h3 style="color: #2d3748; margin-bottom: 15px;">No Data Found</h3>
+                    <p style="color: #718096; margin-bottom: 25px;">This card link doesn't contain any profile data.</p>
+                    <button onclick="goBackToEditor()" style="background: #4299e1; color: white; border: none; padding: 12px 24px; border-radius: 10px; cursor: pointer; font-weight: 600;">
+                        <i class="fas fa-plus"></i> Create Your Profile
+                    </button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
